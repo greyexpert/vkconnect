@@ -1,0 +1,61 @@
+{*
+/**
+* Copyright (c) 2012, Sergey Kambalin
+* All rights reserved.
+
+* ATTENTION: This commercial software is intended for use with Oxwall Free Community Software http://www.oxwall.org/
+* and is licensed under Oxwall Store Commercial License.
+* Full text of this license can be found at http://www.oxwall.org/store/oscl
+*/
+*}
+
+{$menu}
+
+<p>
+{text key="vkconnect+admin_fields_legend"}
+</p>
+<form method="post" action="{$formAction}">
+<table class="ow_table_2 ow_stdmargin ow_automargin ow_wide">
+    <tr>
+        <th width="50%" align="center">{text key="vkconnect+admin_fields_questions_label"}</th>
+        <th align="center">{text key="vkconnect+admin_fields_fields_label"}</th>
+    </tr>
+    
+    
+    {foreach from=$questionList item=section}
+    	{if $section.name != "vkGeneralSection"}
+        <tr>
+            <th colspan="2">{section_lang name=$section.name}</th>
+        </tr>
+        {/if}
+        {foreach from=$section.items item=question}
+		    <tr class="{cycle name="view1" values="ow_alt1,ow_alt2"}">
+		        <td class="ow_label">{question_lang name=$question.name}</td>
+		        <td class="ow_value">
+                    {if count($question.vkFields) > 1}
+                        <select name="alias[{$question.name}]">
+                            <option value="">
+                                    Select
+                            </option>
+                            {foreach from=$question.vkFields item=vkf}
+                                <option value="{$vkf}" {if $question.alias == $vkf}selected="selected"{/if}>
+                                    {text key="vkconnect+vk_field_`$vkf`"}
+                                </option>
+                            {/foreach}
+                        </select>
+                    {else}
+                        {text key="vkconnect+vk_field_`$question.vkFields.0`"}
+                    {/if}
+                </td>
+		    </tr>
+        {/foreach}
+    {/foreach}
+</table>
+
+<div class="clearfix ow_sdtmargin"><div class="ow_right">{decorator name="button" type="submit" class="ow_ic_save ow_positive" langLabel='vkconnect+save_btn_label'}</div><div class="ow_right"></div></div>
+
+
+</form>
+<p>
+{text key="vkconnect+admin_fields_suggest" questionsUrl=$questions_url}
+</p>

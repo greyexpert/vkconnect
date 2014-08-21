@@ -1,0 +1,64 @@
+{*
+/**
+* Copyright (c) 2012, Sergey Kambalin
+* All rights reserved.
+
+* ATTENTION: This commercial software is intended for use with Oxwall Free Community Software http://www.oxwall.org/
+* and is licensed under Oxwall Store Commercial License.
+* Full text of this license can be found at http://www.oxwall.org/store/oscl
+*/
+*}
+
+{$menu}
+
+{form name='VKCONNECT_SettingsForm'}
+
+<table class="ow_table_1 ow_form">
+    
+    <tr>
+        <th class="ow_name ow_txtleft" colspan="3">
+            <span class="ow_section_icon ow_ic_gear_wheel">{text key='vkconnect+admin_settings_title'}</span>
+        </th>
+    </tr>
+
+    <tr class="{cycle values="ow_alt2, ow_alt1"}">
+        <td class="ow_label">{text key='vkconnect+admin_settings_client_id'}</td>
+        <td class="ow_value">{input name='client_id'} {error name='client_id'}</td>
+        <td class="ow_desc">
+            {if empty($appUrl)}
+                {text key='vkconnect+admin_settings_client_id_desc' addAppUrl=$addAppUrl}
+            {else}
+                {text key='vkconnect+admin_settings_app_url' appUrl=$appUrl}
+            {/if}
+        </td>
+    </tr>
+
+    <tr class="{cycle values="ow_alt2, ow_alt1"}">
+        <td class="ow_label">{text key='vkconnect+admin_settings_client_secret'}</td>
+        <td class="ow_value">{input name='client_secret'} {error name='client_secret'}</td>
+        <td class="ow_desc"></td>
+    </tr>
+
+    <tr class="{cycle values="ow_alt2, ow_alt1"}">
+        <td class="ow_label">{text key='vkconnect+admin_settings_synchronize'}</td>
+        <td class="ow_value">{input name='allow_synchronize'} {error name='allow_synchronize'}</td>
+        <td class="ow_desc">{text key='vkconnect+admin_settings_synchronize_desc'}</td>
+    </tr>
+
+    <tr class="{cycle values="ow_alt2, ow_alt1"}">
+        <td class="ow_label">{text key='vkconnect+admin_settings_synchronize_avatar'}</td>
+        <td class="ow_value">{input name='synchronize_avatar'} {error name='synchronize_avatar'}</td>
+        <td class="ow_desc">{text key='vkconnect+admin_settings_synchronize_avatar_desc'}</td>
+    </tr>
+    
+    <tr class="{cycle values="ow_alt2, ow_alt1"}">
+        <td class="ow_label">{text key='vkconnect+admin_settings_require_email'}</td>
+        <td class="ow_value">{input name='require_email'} {error name='require_email'}</td>
+        <td class="ow_desc">{text key='vkconnect+admin_settings_require_email_desc'}</td>
+    </tr>
+
+</table>
+
+<div class="clearfix ow_submit ow_smallmargin"><div class="ow_right">{submit name='save' class='ow_ic_save'}</div><div class="ow_right"></div></div>
+
+{/form}

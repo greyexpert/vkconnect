@@ -1,0 +1,59 @@
+{*
+/**
+ * Copyright (c) 2012, Sergey Kambalin
+ * All rights reserved.
+
+ * ATTENTION: This commercial software is intended for use with Oxwall Free Community Software http://www.oxwall.org/
+ * and is licensed under Oxwall Store Commercial License.
+ * Full text of this license can be found at http://www.oxwall.org/store/oscl
+ */
+*}
+
+{style}{literal}
+
+   .vka-email
+   {
+        padding: 0px 20px;
+   }
+
+   .vka-tip
+   {
+        padding: 0px 10px;
+   }
+
+   .vka-controls
+   {
+        padding: 0px 5px;
+   }
+
+
+{/literal}{/style}
+
+<div class="vkconnect-alert">
+    {form name="VKCONNECT_AlertForm"}
+    <div class="vka-tip ow_smallmargin">
+        {if $confirmEmail}
+            {text key="vkconnect+alert_tip_required" editUrl=$editUrl}
+        {else}
+            {text key="vkconnect+alert_tip" editUrl=$editUrl}
+        {/if}
+    </div>
+    <div class="vka-email ow_smallmargin">
+        {input name="email"}
+        {error name='email'}
+    </div>
+    <div class="vka-controls clearfix">
+        
+        {if !$confirmEmail}
+            <div class="ow_left">
+                {decorator onclick="VKCONNECT_AlertFB.close();" name="button" langLabel="vkconnect+alert_skip_label" class="ow_ic_clock"}
+            </div>
+        {/if}
+        
+        <div class="ow_right">
+            {submit class="ow_ic_save" name="save"}
+        </div>
+
+    </div>
+    {/form}
+</div>

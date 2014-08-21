@@ -1,0 +1,84 @@
+.vkconnect-connect
+{
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0px 5px;
+}
+
+.vkconnect-icon
+{
+    border-bottom-left-radius: 2px;
+    border-color: #3E6797;
+    border-style: solid none solid solid;
+    border-top-left-radius: 2px;
+    border-width: 1px 0 1px 1px;
+    float: left;
+    padding: 0;
+}
+
+.vkconnect-left-border
+{
+    background: none repeat scroll 0 0 #6D8EB2;
+    border-bottom-left-radius: 1px;
+    border-color: #7D9ABB #3E6797 #5C81AA #5C81AA;
+    border-style: solid;
+    border-top-left-radius: 1px;
+    border-width: 1px;
+    height: 10px;
+    padding: 4px 5px 4px 4px;
+    width: 12px;
+}
+
+.vkconnect-label
+{
+    border-bottom-right-radius: 2px;
+    border-color: #ADBCCB;
+    border-style: solid solid solid none;
+    border-top-right-radius: 2px;
+    border-width: 1px 1px 1px 0;
+    float: left;
+    height: 20px;
+    padding: 0;
+}
+
+.vkconnect-right-border
+{
+    background: none repeat scroll 0 0 #EDF2F6;
+    border-bottom-right-radius: 1px;
+    border-color: #FFFFFF #EDF2F6 #EDF2F6;
+    border-style: solid;
+    border-top-right-radius: 1px;
+    border-width: 1px;
+    color: #2F5879;
+    height: 14px;
+    line-height: 14px;
+    padding: 2px 4px;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.vk-icon
+{
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 9px;
+    width: 13px;
+}
+
+.ow_ico_signin_vk
+{
+    background-image: url("ico_signin_vk.png");
+}
+
+.vkconnect-mconnect a {
+    background-color: #44678d;
+}
+
+.vkconnect-mconnect span {
+    color: #FFFFFF;
+    padding-left: 40px;
+    background-image: url("vk_mobile_logo.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 18px;
+}
