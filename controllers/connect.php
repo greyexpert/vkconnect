@@ -590,8 +590,10 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
 
         OW::getSession()->delete('vkconnect-remind');
 
+        OW::getFeedback()->info($msg);
+
         echo json_encode(array(
-            'message' => $msg
+            "error" => false
         ));
         exit;
     }
