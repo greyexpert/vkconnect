@@ -34,7 +34,7 @@ class VKCONNECT_CLASS_EventHandler
                 'iconClass' => 'ow_ic_user'
             )
         ));
-        
+
         OW::getEventManager()->trigger($event);
     }
 
@@ -46,38 +46,38 @@ class VKCONNECT_CLASS_EventHandler
         {
             return;
         }
-        
+
         $event = new OW_Event(OW_EventManager::ON_USER_EDIT, array(
             'method' => 'native',
             'userId' => $params['userId']
         ));
-        
+
         OW::getEventManager()->trigger($event);
     }
-    
-    public function onCollectAccessExceptions( BASE_CLASS_EventCollector $event ) 
+
+    public function onCollectAccessExceptions( BASE_CLASS_EventCollector $event )
     {
         $event->add(array('controller' => 'VKCONNECT_CTRL_Connect', 'action' => 'login'));
         $event->add(array('controller' => 'VKCONNECT_CTRL_Connect', 'action' => 'alertRsp'));
         $event->add(array('controller' => 'VKCONNECT_CTRL_Connect', 'action' => 'auth'));
     }
-    
+
     public function onCollectAdminNotification( BASE_CLASS_EventCollector $event )
     {
         $language = OW::getLanguage();
-        
+
         if ( !VKCONNECT_BOL_Service::getInstance()->isAppReady() )
         {
-            $event->add($language->text('vkconnect', 'admin_configuration_required_notification', array( 
-                'href' => OW::getRouter()->urlForRoute('vkconnect_admin_settings') 
+            $event->add($language->text('vkconnect', 'admin_configuration_required_notification', array(
+                'href' => OW::getRouter()->urlForRoute('vkconnect_admin_settings')
             )));
         }
-    }    
-    
+    }
+
     public function beforeDocumentRender()
     {
         $userId = OW::getUser()->getId();
-    
+
         $confirmEmail = OW::getConfig()->getValue('base', 'confirm_email') == 1;
 
         if ($confirmEmail)
@@ -115,7 +115,7 @@ class VKCONNECT_CLASS_EventHandler
 
         if ( $emailRequired )
         {
-            $js->addScript('VKCONNECT_AlertFB.bind("close", function() { OW.error({$msg}); return false; });', array(
+            $js->addScript('VKCONNECT_AlertFB.bind("close", function(options) { OW.error({$msg}); return false; });', array(
                 "msg" => OW::getLanguage()->text('vkconnect', 'enter_email_message')
             ));
         }
@@ -131,22 +131,22 @@ class VKCONNECT_CLASS_EventHandler
             OW::getSession()->set('vkconnect-remind', 3);
         }
     }
-    
+
     public function genericInit()
     {
         OW::getEventManager()->bind(BASE_CMP_ConnectButtonList::HOOK_REMOTE_AUTH_BUTTON_LIST, array($this, "onCollectButtonList"));
         OW::getEventManager()->bind(OW_EventManager::ON_USER_REGISTER, array($this, "afterUserRegistered"));
         OW::getEventManager()->bind(OW_EventManager::ON_USER_EDIT, array($this, "afterUserSynchronized"));
-        
+
         OW::getEventManager()->bind('base.members_only_exceptions', array($this, "onCollectAccessExceptions"));
         OW::getEventManager()->bind('base.password_protected_exceptions', array($this, "onCollectAccessExceptions"));
         OW::getEventManager()->bind('base.splash_screen_exceptions', array($this, "onCollectAccessExceptions"));
     }
-    
+
     public function init()
     {
         $this->genericInit();
-        
+
         OW::getEventManager()->bind(OW_EventManager::ON_BEFORE_DOCUMENT_RENDER, array($this, "beforeDocumentRender"));
         OW::getEventManager()->bind('admin.add_admin_notification', array($this, "onCollectAdminNotification"));
     }
