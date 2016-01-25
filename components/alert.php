@@ -17,22 +17,19 @@ class VKCONNECT_CMP_Alert extends OW_Component
 
         $form = new VKCONNECT_AlertForm();
         $this->addForm($form);
-        
-        $requiredEmail = OW::getConfig()->getValue('base', 'confirm_email') == 1 
-                        || OW::getConfig()->getValue('vkconnect', 'require_email') == 1;
+
+        $requiredEmail = OW::getConfig()->getValue('base', 'confirm_email') == 1
+            || OW::getConfig()->getValue('vkconnect', 'require_email') == 1;
 
         $js = 'owForms[{$form}].bind("success", function(data)
         {
-            if ( data.message )
-            {
-                
-                OW.info(data.message);
-                ' . ( OW::getConfig()->getValue('base', 'confirm_email') == 1 ? 'window.location.reload();' : 'VKCONNECT_AlertFB.close();' ) . ' 
-            }
-
             if ( data.error )
             {
                 OW.error(data.error);
+            }
+            else
+            {
+                window.location.reload();
             }
         });';
 
@@ -61,6 +58,7 @@ class VKCONNECT_AlertForm extends Form
         $language = OW::getLanguage();
 
         $field = new TextField('email');
+        $field->setRequired(true);
         $field->addValidator(new EmailValidator());
         $field->setHasInvitation(true);
         $field->setInvitation($language->text('vkconnect', 'alert_email_inv'));

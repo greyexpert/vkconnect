@@ -38,12 +38,12 @@ class VKCONNECT_CMP_Connect extends OW_Component
 
         OW::getDocument()->addOnloadScript($js);
     }
-    
+
     public function getLoginUrl( $invCode )
     {
         return VKCONNECT_BOL_Service::getInstance()->getLoginUrl($invCode);
     }
-    
+
     public function getSynchronizeUrl()
     {
         return VKCONNECT_BOL_Service::getInstance()->getSynchronizeUrl();

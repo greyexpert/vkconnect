@@ -31,7 +31,7 @@ class VKCONNECT_BOL_Service
     public function findQuestionList()
     {
         $questions = BOL_QuestionService::getInstance()->findAllQuestions();
-        
+
         $out = array();
         foreach ($questions as $question)
         {
@@ -103,16 +103,16 @@ class VKCONNECT_BOL_Service
             'callbackUri' => urlencode($callback),
             "popup" => $popup ? 1 : 0
         ));
-        
+
         return urlencode($redirectUrl);
     }
-    
+
     public function getAuthUrl( $callback, $popup = true )
     {
         $configs = OW::getConfig()->getValues('vkconnect');
 
         $appId = $configs['client_id'];
-        $scope = '';
+        $scope = 'email';
         $redirectUrl = $this->getRedirectUri($callback, $popup);
 
         return "https://oauth.vk.com/authorize?client_id=$appId&scope=$scope&redirect_uri=$redirectUrl&response_type=code&display=" . ($popup ? "popup" : "page");
