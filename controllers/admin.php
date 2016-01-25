@@ -105,7 +105,6 @@ class VKCONNECT_CTRL_Admin extends ADMIN_CTRL_Abstract
         $questionSectionDtoList = BOL_QuestionService::getInstance()->findAllSections();
         
         $tplSectionQuestionList = array();
-        
 
 		if ( !empty($questionList["vkGeneralSection"]) )
 		{
