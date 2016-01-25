@@ -13,8 +13,6 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
 {
     private function getInfo( $token, $userId )
     {
-        $configs = OW::getConfig()->getValues('vkconnect');
-
         $infoRequest = "https://api.vk.com/method/getProfiles?uid=$userId&fields=uid,first_name,last_name,nickname,domain,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,has_mobile,rate,contacts,education&access_token=$token";
         $infoResponce = $this->apiRequest($infoRequest);
         $info = json_decode($infoResponce, true);
@@ -114,7 +112,7 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
 
 
     private function transLate($string)
-   {
+    {
 
         $arr = array(
             'А' => 'A' , 'Б' => 'B' , 'В' => 'V'  , 'Г' => 'G',
@@ -140,7 +138,7 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
         $translate = str_replace($key, $val, $string);
 
         return $translate;
-   }
+    }
 
     public function usernameConvert( $p1, $p2, $tc = 0 )
     {
@@ -161,19 +159,19 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
     public function auth()
     {
         $popup = !empty($_GET["popup"]);
-        
+
         if ($popup)
         {
             OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate('blank'));
         }
-        
+
         if ( empty($_GET['code']) )
         {
             if ( !$popup )
             {
                 $this->redirect(OW_URL_HOME);
             }
-            
+
             return;
         }
 
@@ -183,8 +181,6 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
         $callbackUrl = OW_URL_HOME . $callbackUri;
 
         $configs = OW::getConfig()->getValues('vkconnect');
-        $loginUrl = VKCONNECT_BOL_Service::getInstance()->getAuthUrl($callbackUri);
-
         $appId = $configs['client_id'];
         $appSecret = $configs['client_secret'];
 
@@ -195,40 +191,41 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
 
         $tokenData = json_decode($tokenResponce, true);
 
-
         if ( isset($tokenData['error']) )
         {
             if ($popup)
             {
                 $this->assign('callback', json_encode($callbackUrl));
             }
-            else 
+            else
             {
                 $this->redirect($callbackUrl);
             }
-            
+
             return;
         }
 
         $userId = $tokenData['user_id'];
         $token = $tokenData['access_token'];
+        $email = isset($tokenData['email']) ? $tokenData['email'] : null;
 
         $callback = OW::getRequest()->buildUrlQueryString($callbackUrl, array(
             'token' => $token,
-            'user' => $userId
+            'user' => $userId,
+            'email' => $email
         ));
 
         if ($popup)
         {
             $this->assign('callback', json_encode($callback));
         }
-        else 
+        else
         {
             $this->redirect($callback);
         }
     }
 
-    
+
     private function apiRequest( $url )
     {
         if ( function_exists('curl_init') )
@@ -315,19 +312,40 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
         $homeUrl = parse_url(OW_URL_HOME);
         //Fake email
         $email = 'vk.' . $vkUser . '@' . $homeUrl['host'];
+        $emailIsFetched = false;
+
+        if ( !empty($_GET["email"]) )
+        {
+            $email = $_GET["email"];
+            $emailIsFetched = true;
+        }
+
         $password = uniqid();
 
         try
         {
-            $user = BOL_UserService::getInstance()->createUser($username, $password, $email, null, false);
+            $user = BOL_UserService::getInstance()->createUser($username, $password, $email, null, $emailIsFetched);
             unset($questions['username']);
             unset($email);
         }
         catch ( Exception $e )
         {
-            OW::getFeedback()->error($language->text('vkconnect', 'join_incomplete'));
+            switch ( $e->getCode() )
+            {
+                case BOL_UserService::CREATE_USER_DUPLICATE_EMAIL:
+                    OW::getFeedback()->error($language->text('vkconnect', 'join_dublicate_email_msg'));
+                    $this->redirect($backUrl);
+                    break;
 
-            $this->redirect($backUrl);
+                case BOL_UserService::CREATE_USER_INVALID_USERNAME:
+                    OW::getFeedback()->error($language->text('vkconnect', 'join_incorrect_username'));
+                    $this->redirect($backUrl);
+                    break;
+
+                default:
+                    OW::getFeedback()->error($language->text('vkconnect', 'join_incomplete'));
+                    $this->redirect($backUrl);
+            }
         }
 
         if ( !empty($questions['picture_small']) )
@@ -403,10 +421,11 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
                     'code' => $invCode
                 )
             ));
+
             OW::getEventManager()->trigger($event);
             OW::getSession()->set('vkconnect-remind', 2);
 
-            BOL_PreferenceService::getInstance()->savePreferenceValue('vkconnect_email_required', 0, $user->id);
+            BOL_PreferenceService::getInstance()->savePreferenceValue('vkconnect_email_required', $emailIsFetched ? 0 : 1, $user->id);
         }
 
         $this->redirect($backUrl);
@@ -431,8 +450,6 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
         }
 
         $language = OW::getLanguage();
-
-        $vkUser = $info['uid'];
 
         $questionsService = BOL_QuestionService::getInstance();
         $userService = BOL_UserService::getInstance();
