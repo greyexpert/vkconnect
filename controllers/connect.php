@@ -326,19 +326,22 @@ class VKCONNECT_CTRL_Connect extends OW_ActionController
         {
             $user = BOL_UserService::getInstance()->createUser($username, $password, $email, null, $emailIsFetched);
             unset($questions['username']);
-            unset($email);
         }
         catch ( Exception $e )
         {
             switch ( $e->getCode() )
             {
                 case BOL_UserService::CREATE_USER_DUPLICATE_EMAIL:
-                    OW::getFeedback()->error($language->text('vkconnect', 'join_dublicate_email_msg'));
+                    OW::getFeedback()->error($language->text('vkconnect', 'join_dublicate_email_msg', array(
+                        "email" => $email
+                    )));
                     $this->redirect($backUrl);
                     break;
 
                 case BOL_UserService::CREATE_USER_INVALID_USERNAME:
-                    OW::getFeedback()->error($language->text('vkconnect', 'join_incorrect_username'));
+                    OW::getFeedback()->error($language->text('vkconnect', 'join_incorrect_username', array(
+                        "username" => $username
+                    )));
                     $this->redirect($backUrl);
                     break;
 
